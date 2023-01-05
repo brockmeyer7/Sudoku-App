@@ -1,10 +1,15 @@
-import csv
-from random import choice
 from readchar import readkey, key
+from random import choice
+import csv
 
 
 class Puzzle:
-    def __init__(self, file):
+    def __init__(self):
+        self.grid = [0 for i in range(81)]
+        self.original = ()
+        self.grid_idx = 0
+
+    def load_puzzle(self, file):
         with open(file, 'r') as file:
             puzzle_pool = list(csv.reader(file))
             puzzle_pool.pop(0)
@@ -19,12 +24,11 @@ class Puzzle:
             for item in puzzle_data[2]:
                 solution.append(int(item))
 
-            self.original = tuple(grid)
-            self.grid = grid
             self.solution = tuple(solution)
-            self.grid_idx = 0
+            self.grid = grid
+            self.original = tuple(self.grid)
 
-    def render_puzzle(self):
+    def show_puzzle(self):
 
         def subrow(start, end, row_start):
             string = ""
@@ -71,7 +75,7 @@ class Puzzle:
             while self.grid[self.grid_idx] != 0:
                 self.grid_idx += 1
 
-            self.render_puzzle()
+            self.show_puzzle()
             if self.navigate_grid():
                 while True:
                     value = input(
@@ -84,29 +88,8 @@ class Puzzle:
             else:
                 return False
 
-        self.render_puzzle()
+        self.show_puzzle()
         return True
-
-    def check_solution(self):
-        counter = 0
-        for i in range(len(self.grid)):
-            if self.grid[i] != self.solution[i]:
-                counter += 1
-
-        if counter == 0:
-            print("Congratulations! Your solution is correct!")
-            return True
-        else:
-            print(f"Oops, you have {counter} incorrect cells")
-            print("\n1) Clear errors and continue solving\n2) Quit")
-            user_input = input("Selection: ")
-            if user_input == "1":
-                for i in range(len(self.grid)):
-                    if self.grid[i] != self.solution[i]:
-                        self.grid[i] = 0
-                return False
-            elif user_input == "2":
-                return True
 
     def navigate_grid(self):
 
@@ -137,7 +120,7 @@ class Puzzle:
                     if self.grid_idx % 9 == 8:
                         while self.is_original_cell():
                             move_left()
-                self.render_puzzle()
+                self.show_puzzle()
                 print(
                     'Use arrow keys to navigate, press enter to fill highlighted cell, or press "Q" to exit to main menu:')
             elif k == key.LEFT:
@@ -147,7 +130,7 @@ class Puzzle:
                     if self.grid_idx % 9 == 0:
                         while self.is_original_cell():
                             move_right()
-                self.render_puzzle()
+                self.show_puzzle()
                 print(
                     'Use arrow keys to navigate, press enter to fill highlighted cell, or press "Q" to exit to main menu:')
             elif k == key.UP:
@@ -157,7 +140,7 @@ class Puzzle:
                     if self.grid_idx // 9 == 0:
                         while self.is_original_cell():
                             move_down()
-                self.render_puzzle()
+                self.show_puzzle()
                 print(
                     'Use arrow keys to navigate, press enter to fill highlighted cell, or press "Q" to exit to main menu:')
             elif k == key.DOWN:
@@ -167,7 +150,7 @@ class Puzzle:
                     if self.grid_idx // 9 == 8:
                         while self.is_original_cell():
                             move_up()
-                self.render_puzzle()
+                self.show_puzzle()
                 print(
                     'Use arrow keys to navigate, press enter to fill highlighted cell, or press "Q" to exit to main menu:')
             elif k == key.ENTER:
@@ -175,7 +158,7 @@ class Puzzle:
                     print(
                         'Use arrow keys to navigate, press enter to fill highlighted cell, or press "Q" to exit to main menu:')
                 else:
-                    self.render_puzzle()
+                    self.show_puzzle()
                     return True
             elif k == "q":
                 return False
@@ -184,3 +167,24 @@ class Puzzle:
         if self.original[self.grid_idx] != 0:
             return True
         return False
+
+    def check_solution(self):
+        counter = 0
+        for i in range(len(self.grid)):
+            if self.grid[i] != self.solution[i]:
+                counter += 1
+
+        if counter == 0:
+            print("Congratulations! Your solution is correct!")
+            return True
+        else:
+            print(f"Oops, you have {counter} incorrect cells")
+            print("\n1) Clear errors and continue solving\n2) Quit")
+            user_input = input("Selection: ")
+            if user_input == "1":
+                for i in range(len(self.grid)):
+                    if self.grid[i] != self.solution[i]:
+                        self.grid[i] = 0
+                return False
+            elif user_input == "2":
+                return True
