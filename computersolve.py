@@ -57,12 +57,12 @@ class ComputerSolve(Puzzle):
 
                 if self.solve() in [1, 2]:
                     return 2
-
             self.grid[self.grid_idx] = 0
             self.move_backward()
+            if self.grid_idx < 0:
+                print("no solution found")
 
     def get_safe_nums(self):
-        pass
         row_start = self.grid_idx // 9 * 9
         column_start = self.grid_idx % 9
         box_start = (self.grid_idx // 9 // 3 * 27) + \
@@ -102,20 +102,20 @@ class ComputerSolve(Puzzle):
 if __name__ == "__main__":
 
     file_list = ["novice", "easy", "medium", "hard", "impossible"]
+    bad_puzzles=[]
     difficulty = choice(file_list)
-    file_name = "puzzles/" + difficulty + ".csv"
-
+    # file_name = "puzzles/" + difficulty + ".csv"
+    file_name = "puzzles/medium.csv"
     puzzle = ComputerSolve()
-    puzzle.load_puzzle(file_name)
-
+    puzzle.load_puzzle(file_name, 1639)
     puzzle.show_puzzle()
 
-    print("Puzzle difficulty =", difficulty)
-    print("Press any key to continue...")
-    k = readkey()
-    print("Solving...")
+    # print("Puzzle difficulty =", difficulty)
+    # print("Press any key to continue...")
+    # # k = readkey()
+    # # print("Solving...")
 
     puzzle.grid_idx = 0
     puzzle.solve()
-    puzzle.show_puzzle()
-    puzzle.check_solution()
+    # puzzle.show_puzzle()
+    # puzzle.check_solution()

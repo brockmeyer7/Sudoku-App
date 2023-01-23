@@ -9,11 +9,11 @@ class Puzzle:
         self.original = ()
         self.grid_idx = 0
 
-    def load_puzzle(self, file):
+    def load_puzzle(self, file, id):
         with open(file, 'r') as file:
             puzzle_pool = list(csv.reader(file))
             puzzle_pool.pop(0)
-            puzzle_data = choice(puzzle_pool)
+            puzzle_data = puzzle_pool[id - 1]
             grid = []
             solution = []
             for item in puzzle_data[1]:
@@ -27,6 +27,7 @@ class Puzzle:
             self.solution = tuple(solution)
             self.grid = grid
             self.original = tuple(self.grid)
+            return puzzle_data[0]
 
     def show_puzzle(self):
 
@@ -179,12 +180,13 @@ class Puzzle:
             return True
         else:
             print(f"Oops, you have {counter} incorrect cells")
-            print("\n1) Clear errors and continue solving\n2) Quit")
-            user_input = input("Selection: ")
-            if user_input == "1":
-                for i in range(len(self.grid)):
-                    if self.grid[i] != self.solution[i]:
-                        self.grid[i] = 0
-                return False
-            elif user_input == "2":
-                return True
+            return False
+            # print("\n1) Clear errors and continue solving\n2) Quit")
+            # user_input = input("Selection: ")
+            # if user_input == "1":
+            #     for i in range(len(self.grid)):
+            #         if self.grid[i] != self.solution[i]:
+            #             self.grid[i] = 0
+            #     return False
+            # elif user_input == "2":
+            #     return True
