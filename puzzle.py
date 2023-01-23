@@ -9,11 +9,11 @@ class Puzzle:
         self.original = ()
         self.grid_idx = 0
 
-    def load_puzzle(self, file, id):
+    def load_puzzle(self, file):
         with open(file, 'r') as file:
             puzzle_pool = list(csv.reader(file))
             puzzle_pool.pop(0)
-            puzzle_data = puzzle_pool[id - 1]
+            puzzle_data = choice(puzzle_pool)
             grid = []
             solution = []
             for item in puzzle_data[1]:
